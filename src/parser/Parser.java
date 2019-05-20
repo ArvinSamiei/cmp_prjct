@@ -228,7 +228,6 @@ public class Parser {
     }
 
     private void moveOnDiagrams(Parser parser, TransitionStates transitionState) {
-//        System.out.println(transitionState.name());
         switch (transitionState) {
             case program_0:
                 stacks.get("program").push(0);
@@ -244,8 +243,7 @@ public class Parser {
                 if (isValidTerminal("EOF", transitionState)) {
                     writeToOutput("EOF", stacks.get("program").pop() + 1);
                     moveOnDiagrams(parser, TransitionStates.program_2);
-                }
-                else {
+                } else {
                     errorFormatter.format("Parser : %d : Syntax Error! Malformed Input\n", lexer.getLineNumber());
                     errorFormatter.close();
                     outputFormatter.close();
@@ -272,12 +270,11 @@ public class Parser {
                     moveOnDiagrams(parser, TransitionStates.declaration_list_2);
                 } else {
                     int res = handleNonterminalErrors("declaration_list");
-                    if (res == 2){
+                    if (res == 2) {
                         popFromStack("declaration_list");
                         writeToError("declaration_list", 2);
                         moveOnDiagrams(parser, TransitionStates.declaration_list_2);
-                    }
-                    else {
+                    } else {
                         moveOnDiagrams(parser, TransitionStates.declaration_list_1);
                     }
                 }
@@ -293,22 +290,7 @@ public class Parser {
                 }
                 break;
             case declaration_1:
-                if (isValidNonTerminal("s1")) {
-                    pushToOtherStack("declaration", "s1");
-                    moveOnDiagrams(parser, TransitionStates.s1_0);
-                    moveOnDiagrams(parser, TransitionStates.declaration_2);
-                }
-                else {
-                    int res = handleNonterminalErrors("s1");
-                    if (res == 2){
-                        popFromStack("declaration");
-                        writeToError("s1", 2);
-                        moveOnDiagrams(parser, TransitionStates.declaration_2);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.declaration_1);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "s1", "declaration", TransitionStates.s1_0, TransitionStates.declaration_2, TransitionStates.declaration_1);
                 break;
             case declaration_2:
                 return;
@@ -320,22 +302,7 @@ public class Parser {
                 }
                 break;
             case s1_1:
-                if (isValidNonTerminal("s10")) {
-                    pushToOtherStack("s1", "s10");
-                    moveOnDiagrams(parser, TransitionStates.s10_0);
-                    moveOnDiagrams(parser, TransitionStates.s1_2);
-                }
-                else {
-                    int res = handleNonterminalErrors("s10");
-                    if (res == 2){
-                        popFromStack("s1");
-                        writeToError("s10", 2);
-                        moveOnDiagrams(parser, TransitionStates.s1_2);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.s1_1);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "s10", "s1", TransitionStates.s10_0, TransitionStates.s1_2, TransitionStates.s1_1);
                 break;
             case s1_2:
                 return;
@@ -355,80 +322,24 @@ public class Parser {
                 }
                 break;
             case s10_1:
-                if (isValidNonTerminal("params")) {
-                    pushToOtherStack("s10", "params");
-                    moveOnDiagrams(parser, TransitionStates.params_0);
-                    moveOnDiagrams(parser, TransitionStates.s10_2);
-                }
-                else {
-                    int res = handleNonterminalErrors("params");
-                    if (res == 2){
-                        popFromStack("s10");
-                        writeToError("params", 2);
-                        moveOnDiagrams(parser, TransitionStates.s10_2);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.s10_1);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "params", "s10", TransitionStates.params_0, TransitionStates.s10_2, TransitionStates.s10_1);
                 break;
             case s10_2:
-                if (isValidTerminal(")", transitionState)) {
-                } else {
-                    writeToError(")", 0);
-                }
-                writeToOutput(")", stacks.get("s10").pop() + 1);
-                moveOnDiagrams(parser, TransitionStates.s10_3);
+                handleNonzeroTerminalStates(parser, transitionState, ")", "s10", TransitionStates.s10_3);
                 break;
             case s10_3:
-                if (isValidNonTerminal("compound_stmt")) {
-                    pushToOtherStack("s10", "compound_stmt");
-                    moveOnDiagrams(parser, TransitionStates.compound_stmt_0);
-                    moveOnDiagrams(parser, TransitionStates.s10_4);
-                }
-                else {
-                    int res = handleNonterminalErrors("compound_stmt");
-                    if (res == 2){
-                        popFromStack("s10");
-                        writeToError("compound_stmt", 2);
-                        moveOnDiagrams(parser, TransitionStates.s10_4);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.s10_3);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "compound_stmt", "s10", TransitionStates.compound_stmt_0, TransitionStates.s10_4, TransitionStates.s10_3);
                 break;
             case s10_4:
                 return;
             case s10_5:
-                if (isValidTerminal("NUM", transitionState)) {
-
-
-                } else {
-                    writeToError("NUM", 0);
-                }
-                writeToOutput("NUM", stacks.get("s10").pop() + 1);
-                moveOnDiagrams(parser, TransitionStates.s10_6);
+                handleNonzeroTerminalStates(parser, transitionState, "NUM", "s10", TransitionStates.s10_6);
                 break;
             case s10_6:
-                if (isValidTerminal("]", transitionState)) {
-
-
-                } else {
-                    writeToError("]", 0);
-                }
-                writeToOutput("]", stacks.get("s10").pop() + 1);
-                moveOnDiagrams(parser, TransitionStates.s10_7);
+                handleNonzeroTerminalStates(parser, transitionState, "]", "s10", TransitionStates.s10_7);
                 break;
             case s10_7:
-                if (isValidTerminal(";", transitionState)) {
-
-
-                } else {
-                    writeToError(";", 0);
-                }
-                writeToOutput(";", stacks.get("s10").pop() + 1);
-                moveOnDiagrams(parser, TransitionStates.s10_4);
+                handleNonzeroTerminalStates(parser, transitionState, ";", "s10", TransitionStates.s10_4);
                 break;
             case type_specifier_0:
                 if (isValidTerminal("int", transitionState)) {
@@ -455,70 +366,18 @@ public class Parser {
                 }
                 break;
             case params_1:
-                if (isValidTerminal("ID", transitionState)) {
-
-
-                } else {
-                    writeToError("ID", 0);
-                }
-                writeToOutput("ID", stacks.get("params").pop() + 1);
-                moveOnDiagrams(parser, TransitionStates.params_2);
+                handleNonzeroTerminalStates(parser, transitionState, "ID", "params", TransitionStates.params_2);
                 break;
             case params_2:
-                if (isValidNonTerminal("s3")) {
-                    pushToOtherStack("params", "s3");
-                    moveOnDiagrams(parser, TransitionStates.s3_0);
-                    moveOnDiagrams(parser, TransitionStates.params_3);
-                }
-                else {
-                    int res = handleNonterminalErrors("s3");
-                    if (res == 2){
-                        popFromStack("params");
-                        writeToError("s3", 2);
-                        moveOnDiagrams(parser, TransitionStates.params_3);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.params_2);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "s3", "params", TransitionStates.s3_0, TransitionStates.params_3, TransitionStates.params_2);
                 break;
             case params_3:
-                if (isValidNonTerminal("s2")) {
-                    pushToOtherStack("params", "s2");
-                    moveOnDiagrams(parser, TransitionStates.s2_0);
-                    moveOnDiagrams(parser, TransitionStates.params_4);
-                }
-                else {
-                    int res = handleNonterminalErrors("s2");
-                    if (res == 2){
-                        popFromStack("params");
-                        writeToError("s2", 2);
-                        moveOnDiagrams(parser, TransitionStates.params_4);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.params_3);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "s2", "params", TransitionStates.s2_0, TransitionStates.params_4, TransitionStates.params_3);
                 break;
             case params_4:
                 return;
             case params_5:
-                if (isValidNonTerminal("s11")) {
-                    pushToOtherStack("params", "s11");
-                    moveOnDiagrams(parser, TransitionStates.s11_0);
-                    moveOnDiagrams(parser, TransitionStates.params_4);
-                }
-                else {
-                    int res = handleNonterminalErrors("s11");
-                    if (res == 2){
-                        popFromStack("params");
-                        writeToError("s11", 2);
-                        moveOnDiagrams(parser, TransitionStates.params_4);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.params_5);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "s11", "params", TransitionStates.s11_0, TransitionStates.params_4, TransitionStates.params_5);
                 break;
             case s11_0:
                 if (isValidTerminal("ID", transitionState)) {
@@ -529,40 +388,10 @@ public class Parser {
                     moveOnDiagrams(parser, TransitionStates.s11_3);
                 break;
             case s11_1:
-                if (isValidNonTerminal("s3")) {
-                    pushToOtherStack("s11", "s3");
-                    moveOnDiagrams(parser, TransitionStates.s3_0);
-                    moveOnDiagrams(parser, TransitionStates.s11_2);
-                }
-                else {
-                    int res = handleNonterminalErrors("s3");
-                    if (res == 2){
-                        popFromStack("s11");
-                        writeToError("s3", 2);
-                        moveOnDiagrams(parser, TransitionStates.s11_2);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.s11_1);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "s3", "s11", TransitionStates.s3_0, TransitionStates.s11_2, TransitionStates.s11_1);
                 break;
             case s11_2:
-                if (isValidNonTerminal("s2")) {
-                    pushToOtherStack("s11", "s2");
-                    moveOnDiagrams(parser, TransitionStates.s2_0);
-                    moveOnDiagrams(parser, TransitionStates.s11_3);
-                }
-                else {
-                    int res = handleNonterminalErrors("s2");
-                    if (res == 2){
-                        popFromStack("s11");
-                        writeToError("s2", 2);
-                        moveOnDiagrams(parser, TransitionStates.s11_3);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.s11_2);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "s2", "s11", TransitionStates.s2_0, TransitionStates.s11_3, TransitionStates.s11_2);
                 break;
             case s11_3:
                 return;
@@ -575,37 +404,20 @@ public class Parser {
                     moveOnDiagrams(parser, TransitionStates.s2_3);
                 break;
             case s2_1:
-                if (isValidNonTerminal("param")) {
-                    pushToOtherStack("s2", "param");
-                    moveOnDiagrams(parser, TransitionStates.param_0);
-                    moveOnDiagrams(parser, TransitionStates.s2_2);
-                }
-                else {
-                    int res = handleNonterminalErrors("param");
-                    if (res == 2){
-                        popFromStack("s2");
-                        writeToError("param", 2);
-                        moveOnDiagrams(parser, TransitionStates.s2_2);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.s2_1);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "param", "s2", TransitionStates.param_0, TransitionStates.s2_2, TransitionStates.s2_1);
                 break;
             case s2_2:
                 if (isValidNonTerminal("s2")) {
                     pushToOtherStack("s2", "s2");
                     moveOnDiagrams(parser, TransitionStates.s2_0);
                     moveOnDiagrams(parser, TransitionStates.s2_3);
-                }
-                else {
+                } else {
                     int res = handleNonterminalErrors("s2");
-                    if (res == 2){
+                    if (res == 2) {
                         popFromStack("s2");
                         writeToError("s2", 2);
                         moveOnDiagrams(parser, TransitionStates.s2_3);
-                    }
-                    else {
+                    } else {
                         moveOnDiagrams(parser, TransitionStates.s2_2);
                     }
                 }
@@ -621,32 +433,10 @@ public class Parser {
                 }
                 break;
             case param_1:
-                if (isValidTerminal("ID", transitionState)) {
-
-
-                } else {
-                    writeToError("ID", 0);
-                }
-                writeToOutput("ID", stacks.get("param").pop() + 1);
-                moveOnDiagrams(parser, TransitionStates.param_2);
+                handleNonzeroTerminalStates(parser, transitionState, "ID", "param", TransitionStates.param_2);
                 break;
             case param_2:
-                if (isValidNonTerminal("s3")) {
-                    pushToOtherStack("param", "s3");
-                    moveOnDiagrams(parser, TransitionStates.s3_0);
-                    moveOnDiagrams(parser, TransitionStates.param_3);
-                }
-                else {
-                    int res = handleNonterminalErrors("s3");
-                    if (res == 2){
-                        popFromStack("param");
-                        writeToError("s3", 2);
-                        moveOnDiagrams(parser, TransitionStates.param_3);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.param_2);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "s3", "param", TransitionStates.s3_0, TransitionStates.param_3, TransitionStates.param_2);
                 break;
             case param_3:
                 return;
@@ -659,10 +449,7 @@ public class Parser {
                     moveOnDiagrams(parser, TransitionStates.s3_2);
                 break;
             case s3_1:
-                if (isValidTerminal("]", transitionState)) {
-
-
-                } else {
+                if (!isValidTerminal("]", transitionState)) {
                     writeToError("]", 0);
                 }
                 writeToOutput("]", stacks.get("s3").pop());
@@ -678,50 +465,13 @@ public class Parser {
                 }
                 break;
             case compound_stmt_1:
-                if (isValidNonTerminal("declaration_list")) {
-                    pushToOtherStack("compound_stmt", "declaration_list");
-                    moveOnDiagrams(parser, TransitionStates.declaration_list_0);
-                    moveOnDiagrams(parser, TransitionStates.compound_stmt_2);
-                }
-                else {
-                    int res = handleNonterminalErrors("declaration_list");
-                    if (res == 2){
-                        popFromStack("compound_stmt");
-                        writeToError("declaration_list", 2);
-                        moveOnDiagrams(parser, TransitionStates.compound_stmt_2);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.compound_stmt_1);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "declaration_list", "compound_stmt", TransitionStates.declaration_list_0, TransitionStates.compound_stmt_2, TransitionStates.compound_stmt_1);
                 break;
             case compound_stmt_2:
-                if (isValidNonTerminal("statement_list")) {
-                    pushToOtherStack("compound_stmt", "statement_list");
-                    moveOnDiagrams(parser, TransitionStates.statement_list_0);
-                    moveOnDiagrams(parser, TransitionStates.compound_stmt_3);
-                }
-                else {
-                    int res = handleNonterminalErrors("statement_list");
-                    if (res == 2){
-                        popFromStack("compound_stmt");
-                        writeToError("statement_list", 2);
-                        moveOnDiagrams(parser, TransitionStates.compound_stmt_3);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.compound_stmt_2);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "statement_list", "compound_stmt", TransitionStates.statement_list_0, TransitionStates.compound_stmt_3, TransitionStates.compound_stmt_2);
                 break;
             case compound_stmt_3:
-                if (isValidTerminal("}", transitionState)) {
-
-
-                } else {
-                    writeToError("}", 0);
-                }
-                writeToOutput("}", stacks.get("compound_stmt").pop() + 1);
-                moveOnDiagrams(parser, TransitionStates.compound_stmt_4);
+                handleNonzeroTerminalStates(parser, transitionState, "}", "compound_stmt", TransitionStates.compound_stmt_4);
             case compound_stmt_4:
                 return;
             case statement_list_0:
@@ -738,15 +488,13 @@ public class Parser {
                     pushToOtherStack("statement_list", "statement_list");
                     moveOnDiagrams(parser, TransitionStates.statement_list_0);
                     moveOnDiagrams(parser, TransitionStates.statement_list_2);
-                }
-                else {
+                } else {
                     int res = handleNonterminalErrors("statement_list");
-                    if (res == 2){
+                    if (res == 2) {
                         popFromStack("statement_list");
                         writeToError("statement_list", 2);
                         moveOnDiagrams(parser, TransitionStates.statement_list_2);
-                    }
-                    else {
+                    } else {
                         moveOnDiagrams(parser, TransitionStates.statement_list_1);
                     }
                 }
@@ -803,14 +551,7 @@ public class Parser {
                 }
                 break;
             case expression_stmt_1:
-                if (isValidTerminal(";", transitionState)) {
-
-
-                } else {
-                    writeToError(";", 0);
-                }
-                writeToOutput(";", stacks.get("expression_stmt").pop() + 1);
-                moveOnDiagrams(parser, TransitionStates.expression_stmt_2);
+                handleNonzeroTerminalStates(parser, transitionState, ";", "expression_stmt", TransitionStates.expression_stmt_2);
                 break;
             case expression_stmt_2:
                 return;
@@ -822,90 +563,22 @@ public class Parser {
                 }
                 break;
             case selection_stmt_1:
-                if (isValidTerminal("(", transitionState)) {
-
-
-                } else {
-                    writeToError("(", 0);
-                }
-                writeToOutput("(", stacks.get("selection_stmt").pop() + 1);
-                moveOnDiagrams(parser, TransitionStates.selection_stmt_2);
+                handleNonzeroTerminalStates(parser, transitionState, "(", "selection_stmt", TransitionStates.selection_stmt_2);
                 break;
             case selection_stmt_2:
-                if (isValidNonTerminal("expression")) {
-                    pushToOtherStack("selection_stmt", "expression");
-                    moveOnDiagrams(parser, TransitionStates.expression_0);
-                    moveOnDiagrams(parser, TransitionStates.selection_stmt_3);
-                }
-                else {
-                    int res = handleNonterminalErrors("expression");
-                    if (res == 2){
-                        popFromStack("selection_stmt");
-                        writeToError("expression", 2);
-                        moveOnDiagrams(parser, TransitionStates.selection_stmt_3);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.selection_stmt_2);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "expression", "selection_stmt", TransitionStates.expression_0, TransitionStates.selection_stmt_3, TransitionStates.selection_stmt_2);
                 break;
             case selection_stmt_3:
-                if (isValidTerminal(")", transitionState)) {
-
-
-                } else {
-                    writeToError(")", 0);
-                }
-                writeToOutput(")", stacks.get("selection_stmt").pop() + 1);
-                moveOnDiagrams(parser, TransitionStates.selection_stmt_4);
+                handleNonzeroTerminalStates(parser, transitionState, ")", "selection_stmt", TransitionStates.selection_stmt_4);
                 break;
             case selection_stmt_4:
-                if (isValidNonTerminal("statement")) {
-                    pushToOtherStack("selection_stmt", "statement");
-                    moveOnDiagrams(parser, TransitionStates.statement_0);
-                    moveOnDiagrams(parser, TransitionStates.selection_stmt_5);
-                }
-                else {
-                    int res = handleNonterminalErrors("statement");
-                    if (res == 2){
-                        popFromStack("selection_stmt");
-                        writeToError("statement", 2);
-
-                        moveOnDiagrams(parser, TransitionStates.selection_stmt_5);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.selection_stmt_4);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "statement", "selection_stmt", TransitionStates.statement_0, TransitionStates.selection_stmt_5, TransitionStates.selection_stmt_4);
                 break;
             case selection_stmt_5:
-                if (isValidTerminal("else", transitionState)) {
-
-
-                } else {
-                    writeToError("else", 0);
-                }
-                writeToOutput("else", stacks.get("selection_stmt").pop() + 1);
-                moveOnDiagrams(parser, TransitionStates.selection_stmt_6);
+                handleNonzeroTerminalStates(parser, transitionState, "else", "selection_stmt", TransitionStates.selection_stmt_6);
                 break;
             case selection_stmt_6:
-                if (isValidNonTerminal("statement")) {
-                    pushToOtherStack("selection_stmt", "statement");
-                    moveOnDiagrams(parser, TransitionStates.statement_0);
-                    moveOnDiagrams(parser, TransitionStates.selection_stmt_7);
-                }
-                else {
-                    int res = handleNonterminalErrors("statement");
-                    if (res == 2){
-                        popFromStack("selection_stmt");
-                        writeToError("statement", 2);
-//                        System.out.println("heil");
-                        moveOnDiagrams(parser, TransitionStates.selection_stmt_7);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.selection_stmt_6);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "statement", "selection_stmt", TransitionStates.statement_0, TransitionStates.selection_stmt_7, TransitionStates.selection_stmt_6);
                 break;
             case selection_stmt_7:
                 return;
@@ -917,61 +590,16 @@ public class Parser {
                 }
                 break;
             case iteration_stmt_1:
-                if (isValidTerminal("(", transitionState)) {
-
-
-                } else {
-                    writeToError("(", 0);
-                }
-                writeToOutput("(", stacks.get("iteration_stmt").pop() + 1);
-                moveOnDiagrams(parser, TransitionStates.iteration_stmt_2);
+                handleNonzeroTerminalStates(parser, transitionState, "(", "iteration_stmt", TransitionStates.iteration_stmt_2);
                 break;
             case iteration_stmt_2:
-                if (isValidNonTerminal("expression")) {
-                    pushToOtherStack("iteration_stmt", "expression");
-                    moveOnDiagrams(parser, TransitionStates.expression_0);
-                    moveOnDiagrams(parser, TransitionStates.iteration_stmt_3);
-                }
-                else {
-                    int res = handleNonterminalErrors("expression");
-                    if (res == 2){
-                        popFromStack("iteration_stmt");
-                        writeToError("expression", 2);
-                        moveOnDiagrams(parser, TransitionStates.iteration_stmt_3);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.iteration_stmt_2);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "expression", "iteration_stmt", TransitionStates.expression_0, TransitionStates.iteration_stmt_3, TransitionStates.iteration_stmt_2);
                 break;
             case iteration_stmt_3:
-                if (isValidTerminal(")", transitionState)) {
-
-
-                } else {
-                    writeToError(")", 0);
-                }
-                writeToOutput(")", stacks.get("iteration_stmt").pop() + 1);
-                moveOnDiagrams(parser, TransitionStates.iteration_stmt_4);
+                handleNonzeroTerminalStates(parser, transitionState, ")", "iteration_stmt", TransitionStates.iteration_stmt_4);
                 break;
             case iteration_stmt_4:
-                if (isValidNonTerminal("statement")) {
-                    pushToOtherStack("iteration_stmt", "statement");
-                    moveOnDiagrams(parser, TransitionStates.statement_0);
-                    moveOnDiagrams(parser, TransitionStates.iteration_stmt_5);
-                }
-                else {
-                    int res = handleNonterminalErrors("statement");
-                    if (res == 2){
-                        popFromStack("iteration_stmt");
-                        writeToError("statement", 2);
-
-                        moveOnDiagrams(parser, TransitionStates.iteration_stmt_5);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.iteration_stmt_4);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "statement", "iteration_stmt", TransitionStates.statement_0, TransitionStates.iteration_stmt_5, TransitionStates.iteration_stmt_4);
                 break;
             case iteration_stmt_5:
                 return;
@@ -983,22 +611,7 @@ public class Parser {
                 }
                 break;
             case return_stmt_1:
-                if (isValidNonTerminal("s16")) {
-                    pushToOtherStack("return_stmt", "s16");
-                    moveOnDiagrams(parser, TransitionStates.s16_0);
-                    moveOnDiagrams(parser, TransitionStates.return_stmt_2);
-                }
-                else {
-                    int res = handleNonterminalErrors("s16");
-                    if (res == 2){
-                        popFromStack("return_stmt");
-                        writeToError("s16", 2);
-                        moveOnDiagrams(parser, TransitionStates.return_stmt_2);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.return_stmt_1);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "s16", "return_stmt", TransitionStates.s16_0, TransitionStates.return_stmt_2, TransitionStates.return_stmt_1);
                 break;
             case return_stmt_2:
                 return;
@@ -1010,99 +623,26 @@ public class Parser {
                 }
                 break;
             case switch_stmt_1:
-                if (isValidTerminal("(", transitionState)) {
-
-
-                } else {
-                    writeToError("(", 0);
-                }
-                writeToOutput("(", stacks.get("switch_stmt").pop() + 1);
-                moveOnDiagrams(parser, TransitionStates.switch_stmt_2);
+                handleNonzeroTerminalStates(parser, transitionState, "(", "switch_stmt", TransitionStates.switch_stmt_2);
                 break;
             case switch_stmt_2:
-                if (isValidNonTerminal("expression")) {
-                    pushToOtherStack("switch_stmt", "expression");
-                    moveOnDiagrams(parser, TransitionStates.expression_0);
-                    moveOnDiagrams(parser, TransitionStates.switch_stmt_3);
-                }
-                else {
-                    int res = handleNonterminalErrors("expression");
-                    if (res == 2){
-                        popFromStack("switch_stmt");
-                        writeToError("expression", 2);
-                        moveOnDiagrams(parser, TransitionStates.switch_stmt_3);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.switch_stmt_2);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "expression", "switch_stmt", TransitionStates.expression_0, TransitionStates.switch_stmt_3, TransitionStates.switch_stmt_2);
                 break;
             case switch_stmt_3:
-                if (isValidTerminal(")", transitionState)) {
-
-
-                } else {
-                    writeToError(")", 0);
-                }
-                writeToOutput(")", stacks.get("switch_stmt").pop() + 1);
-                moveOnDiagrams(parser, TransitionStates.switch_stmt_4);
+                handleNonzeroTerminalStates(parser, transitionState, ")", "switch_stmt", TransitionStates.switch_stmt_4);
                 break;
             case switch_stmt_4:
-                if (isValidTerminal("{", transitionState)) {
-
-
-                } else {
-                    writeToError("{", 0);
-                }
-                writeToOutput("{", stacks.get("switch_stmt").pop() + 1);
-                moveOnDiagrams(parser, TransitionStates.switch_stmt_5);
+                handleNonzeroTerminalStates(parser, transitionState, "{", "switch_stmt", TransitionStates.switch_stmt_5);
                 break;
             case switch_stmt_5:
-                if (isValidNonTerminal("case_stmts")) {
-                    pushToOtherStack("switch_stmt", "case_stmts");
-                    moveOnDiagrams(parser, TransitionStates.case_stmts_0);
-                    moveOnDiagrams(parser, TransitionStates.switch_stmt_6);
-                }
-                else {
-                    int res = handleNonterminalErrors("case_stmts");
-                    if (res == 2){
-                        popFromStack("switch_stmt");
-                        writeToError("case_stmts", 2);
-                        moveOnDiagrams(parser, TransitionStates.switch_stmt_6);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.switch_stmt_5);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "case_stmts", "switch_stmt", TransitionStates.case_stmts_0, TransitionStates.switch_stmt_6, TransitionStates.switch_stmt_5);
 
                 break;
             case switch_stmt_6:
-                if (isValidNonTerminal("default_stmt")) {
-                    pushToOtherStack("switch_stmt", "default_stmt");
-                    moveOnDiagrams(parser, TransitionStates.default_stmt_0);
-                    moveOnDiagrams(parser, TransitionStates.switch_stmt_7);
-                }
-                else {
-                    int res = handleNonterminalErrors("default_stmt");
-                    if (res == 2){
-                        popFromStack("switch_stmt");
-                        writeToError("default_stmt", 2);
-                        moveOnDiagrams(parser, TransitionStates.switch_stmt_7);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.switch_stmt_6);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "default_stmt", "switch_stmt", TransitionStates.default_stmt_0, TransitionStates.switch_stmt_7, TransitionStates.switch_stmt_6);
                 break;
             case switch_stmt_7:
-                if (isValidTerminal("}", transitionState)) {
-
-
-                } else {
-                    writeToError("}", 0);
-                }
-                writeToOutput("}", stacks.get("switch_stmt").pop() + 1);
-                moveOnDiagrams(parser, TransitionStates.switch_stmt_8);
+                handleNonzeroTerminalStates(parser, transitionState, "}", "switch_stmt", TransitionStates.switch_stmt_8);
                 break;
             case switch_stmt_8:
                 return;
@@ -1119,15 +659,13 @@ public class Parser {
                 if (isValidNonTerminal("case_stmts")) {
                     pushToOtherStack("case_stmts", "case_stmts");
                     moveOnDiagrams(parser, TransitionStates.case_stmts_0);
-                }
-                else {
+                } else {
                     int res = handleNonterminalErrors("case_stmts");
-                    if (res == 2){
+                    if (res == 2) {
                         popFromStack("case_stmts");
                         writeToError("case_stmts", 2);
                         moveOnDiagrams(parser, TransitionStates.case_stmts_0);
-                    }
-                    else {
+                    } else {
                         moveOnDiagrams(parser, TransitionStates.case_stmts_1);
                     }
                 }
@@ -1143,42 +681,13 @@ public class Parser {
                 }
                 break;
             case case_stmt_1:
-                if (isValidTerminal("NUM", transitionState)) {
-
-
-                } else {
-                    writeToError("NUM", 0);
-                }
-                writeToOutput("NUM", stacks.get("case_stmt").pop() + 1);
-                moveOnDiagrams(parser, TransitionStates.case_stmt_2);
+                handleNonzeroTerminalStates(parser, transitionState, "NUM", "case_stmt", TransitionStates.case_stmt_2);
                 break;
             case case_stmt_2:
-                if (isValidTerminal(":", transitionState)) {
-
-
-                } else {
-                    writeToError(":", 0);
-                }
-                writeToOutput(":", stacks.get("case_stmt").pop() + 1);
-                moveOnDiagrams(parser, TransitionStates.case_stmt_3);
+                handleNonzeroTerminalStates(parser, transitionState, ":", "case_stmt", TransitionStates.case_stmt_3);
                 break;
             case case_stmt_3:
-                if (isValidNonTerminal("statement_list")) {
-                    pushToOtherStack("case_stmt", "statement_list");
-                    moveOnDiagrams(parser, TransitionStates.statement_list_0);
-                    moveOnDiagrams(parser, TransitionStates.case_stmt_4);
-                }
-                else {
-                    int res = handleNonterminalErrors("statement_list");
-                    if (res == 2){
-                        popFromStack("case_stmt");
-                        writeToError("statement_list", 2);
-                        moveOnDiagrams(parser, TransitionStates.case_stmt_4);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.case_stmt_3);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "statement_list", "case_stmt", TransitionStates.statement_list_0, TransitionStates.case_stmt_4, TransitionStates.case_stmt_3);
 
                 break;
             case case_stmt_4:
@@ -1192,32 +701,10 @@ public class Parser {
                     moveOnDiagrams(parser, TransitionStates.default_stmt_3);
                 break;
             case default_stmt_1:
-                if (isValidTerminal(":", transitionState)) {
-
-
-                } else {
-                    writeToError(":", 0);
-                }
-                writeToOutput(":", stacks.get("default_stmt").pop() + 1);
-                moveOnDiagrams(parser, TransitionStates.default_stmt_2);
+                handleNonzeroTerminalStates(parser, transitionState, ":", "default_stmt", TransitionStates.default_stmt_2);
                 break;
             case default_stmt_2:
-                if (isValidNonTerminal("statement_list")) {
-                    pushToOtherStack("default_stmt", "statement_list");
-                    moveOnDiagrams(parser, TransitionStates.statement_list_0);
-                    moveOnDiagrams(parser, TransitionStates.default_stmt_3);
-                }
-                else {
-                    int res = handleNonterminalErrors("statement_list");
-                    if (res == 2){
-                        popFromStack("default_stmt");
-                        writeToError("statement_list", 2);
-                        moveOnDiagrams(parser, TransitionStates.default_stmt_3);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.default_stmt_2);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "statement_list", "default_stmt", TransitionStates.statement_list_0, TransitionStates.default_stmt_3, TransitionStates.default_stmt_2);
 
                 break;
             case default_stmt_3:
@@ -1250,138 +737,39 @@ public class Parser {
                     pushToOtherStack("expression", "expression");
                     moveOnDiagrams(parser, TransitionStates.expression_0);
                     moveOnDiagrams(parser, TransitionStates.expression_2);
-                }
-                else {
+                } else {
                     int res = handleNonterminalErrors("expression");
-                    if (res == 2){
+                    if (res == 2) {
                         popFromStack("expression");
                         writeToError("expression", 2);
                         moveOnDiagrams(parser, TransitionStates.expression_2);
-                    }
-                    else {
+                    } else {
                         moveOnDiagrams(parser, TransitionStates.expression_1);
                     }
                 }
                 break;
             case expression_2:
-                if (isValidTerminal(")", transitionState)) {
-
-
-                } else {
-                    writeToError(")", 0);
-                }
-                writeToOutput(")", stacks.get("expression").pop() + 1);
-                moveOnDiagrams(parser, TransitionStates.expression_3);
+                handleNonzeroTerminalStates(parser, transitionState, ")", "expression", TransitionStates.expression_3);
                 break;
             case expression_3:
-                if (isValidNonTerminal("s8")) {
-                    pushToOtherStack("expression", "s8");
-                    moveOnDiagrams(parser, TransitionStates.s8_0);
-                    moveOnDiagrams(parser, TransitionStates.expression_4);
-                }
-                else {
-                    int res = handleNonterminalErrors("s8");
-                    if (res == 2){
-                        popFromStack("expression");
-                        writeToError("s8", 2);
-                        moveOnDiagrams(parser, TransitionStates.expression_4);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.expression_3);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "s8", "expression", TransitionStates.s8_0, TransitionStates.expression_4, TransitionStates.expression_3);
                 break;
             case expression_4:
-                if (isValidNonTerminal("s7")) {
-                    pushToOtherStack("expression", "s7");
-                    moveOnDiagrams(parser, TransitionStates.s7_0);
-                    moveOnDiagrams(parser, TransitionStates.expression_5);
-                }
-                else {
-                    int res = handleNonterminalErrors("s7");
-                    if (res == 2){
-                        popFromStack("expression");
-                        writeToError("s7", 2);
-                        moveOnDiagrams(parser, TransitionStates.expression_5);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.expression_4);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "s7", "expression", TransitionStates.s7_0, TransitionStates.expression_5, TransitionStates.expression_4);
                 break;
             case expression_5:
-                if (isValidNonTerminal("s6")) {
-                    pushToOtherStack("expression", "s6");
-                    moveOnDiagrams(parser, TransitionStates.s6_0);
-                    moveOnDiagrams(parser, TransitionStates.expression_6);
-                }
-                else {
-                    int res = handleNonterminalErrors("s6");
-                    if (res == 2){
-                        popFromStack("expression");
-                        writeToError("s6", 2);
-                        moveOnDiagrams(parser, TransitionStates.expression_6);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.expression_5);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "s6", "expression", TransitionStates.s6_0, TransitionStates.expression_6, TransitionStates.expression_5);
                 break;
             case expression_6:
                 return;
             case expression_7:
-                if (isValidNonTerminal("factor")) {
-                    pushToOtherStack("expression", "factor");
-                    moveOnDiagrams(parser, TransitionStates.factor_0);
-                    moveOnDiagrams(parser, TransitionStates.expression_3);
-                }
-                else {
-                    int res = handleNonterminalErrors("factor");
-                    if (res == 2){
-                        popFromStack("expression");
-                        writeToError("factor", 2);
-                        moveOnDiagrams(parser, TransitionStates.expression_3);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.expression_7);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "factor", "expression", TransitionStates.factor_0, TransitionStates.expression_3, TransitionStates.expression_7);
                 break;
             case expression_8:
-                if (isValidNonTerminal("factor")) {
-                    pushToOtherStack("expression", "factor");
-                    moveOnDiagrams(parser, TransitionStates.factor_0);
-                    moveOnDiagrams(parser, TransitionStates.expression_3);
-                }
-                else {
-                    int res = handleNonterminalErrors("factor");
-                    if (res == 2){
-                        popFromStack("expression");
-                        writeToError("factor", 2);
-                        moveOnDiagrams(parser, TransitionStates.expression_3);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.expression_8);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "factor", "expression", TransitionStates.factor_0, TransitionStates.expression_3, TransitionStates.expression_8);
                 break;
             case expression_9:
-                if (isValidNonTerminal("s12")) {
-                    pushToOtherStack("expression", "s12");
-                    moveOnDiagrams(parser, TransitionStates.s12_0);
-                    moveOnDiagrams(parser, TransitionStates.expression_6);
-                }
-                else {
-                    int res = handleNonterminalErrors("s12");
-                    if (res == 2){
-                        popFromStack("expression");
-                        writeToError("s12", 2);
-                        moveOnDiagrams(parser, TransitionStates.expression_6);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.expression_9);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "s12", "expression", TransitionStates.s12_0, TransitionStates.expression_6, TransitionStates.expression_9);
                 break;
             case s12_0:
                 if (isValidTerminal("(", transitionState)) {
@@ -1404,188 +792,39 @@ public class Parser {
                 }
                 break;
             case s12_1:
-                if (isValidNonTerminal("args")) {
-                    pushToOtherStack("s12", "args");
-                    moveOnDiagrams(parser, TransitionStates.args_0);
-                    moveOnDiagrams(parser, TransitionStates.s12_2);
-                }
-                else {
-                    int res = handleNonterminalErrors("args");
-                    if (res == 2){
-                        popFromStack("s12");
-                        writeToError("args", 2);
-                        moveOnDiagrams(parser, TransitionStates.s12_2);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.s12_1);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "args", "s12", TransitionStates.args_0, TransitionStates.s12_2, TransitionStates.s12_1);
                 break;
             case s12_2:
-                if (isValidTerminal(")", transitionState)) {
-
-
-                } else {
-                    writeToError(")", 0);
-                }
-                writeToOutput(")", stacks.get("s12").pop() + 1);
-                moveOnDiagrams(parser, TransitionStates.s12_3);
+                handleNonzeroTerminalStates(parser, transitionState, ")", "s12", TransitionStates.s12_3);
                 break;
             case s12_3:
-                if (isValidNonTerminal("s8")) {
-                    pushToOtherStack("s12", "s8");
-                    moveOnDiagrams(parser, TransitionStates.s8_0);
-                    moveOnDiagrams(parser, TransitionStates.s12_4);
-                }
-                else {
-                    int res = handleNonterminalErrors("s8");
-                    if (res == 2){
-                        popFromStack("s12");
-                        writeToError("s8", 2);
-                        moveOnDiagrams(parser, TransitionStates.s12_4);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.s12_3);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "s8", "s12", TransitionStates.s8_0, TransitionStates.s12_4, TransitionStates.s12_3);
                 break;
             case s12_4:
-                if (isValidNonTerminal("s7")) {
-                    pushToOtherStack("s12", "s7");
-                    moveOnDiagrams(parser, TransitionStates.s7_0);
-                    moveOnDiagrams(parser, TransitionStates.s12_5);
-                }
-                else {
-                    int res = handleNonterminalErrors("s7");
-                    if (res == 2){
-                        popFromStack("s12");
-                        writeToError("s7", 2);
-                        moveOnDiagrams(parser, TransitionStates.s12_5);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.s12_4);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "s7", "s12", TransitionStates.s7_0, TransitionStates.s12_5, TransitionStates.s12_4);
                 break;
             case s12_5:
-                if (isValidNonTerminal("s6")) {
-                    pushToOtherStack("s12", "s6");
-                    moveOnDiagrams(parser, TransitionStates.s6_0);
-                    moveOnDiagrams(parser, TransitionStates.s12_6);
-                }
-                else {
-                    int res = handleNonterminalErrors("s6");
-                    if (res == 2){
-                        popFromStack("s12");
-                        writeToError("s6", 2);
-                        moveOnDiagrams(parser, TransitionStates.s12_6);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.s12_5);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "s6", "s12", TransitionStates.s6_0, TransitionStates.s12_6, TransitionStates.s12_5);
                 break;
             case s12_6:
                 return;
             case s12_7:
-                if (isValidNonTerminal("expression")) {
-                    pushToOtherStack("s12", "expression");
-                    moveOnDiagrams(parser, TransitionStates.expression_0);
-                    moveOnDiagrams(parser, TransitionStates.s12_6);
-                }
-                else {
-                    int res = handleNonterminalErrors("expression");
-                    if (res == 2){
-                        popFromStack("s12");
-                        writeToError("expression", 2);
-                        moveOnDiagrams(parser, TransitionStates.s12_6);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.s12_7);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "expression", "s12", TransitionStates.expression_0, TransitionStates.s12_6, TransitionStates.s12_7);
                 break;
             case s12_8:
-                if (isValidNonTerminal("expression")) {
-                    pushToOtherStack("s12", "expression");
-                    moveOnDiagrams(parser, TransitionStates.expression_0);
-                    moveOnDiagrams(parser, TransitionStates.s12_9);
-                }
-                else {
-                    int res = handleNonterminalErrors("expression");
-                    if (res == 2){
-                        popFromStack("s12");
-                        writeToError("expression", 2);
-                        moveOnDiagrams(parser, TransitionStates.s12_9);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.s12_8);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "expression", "s12", TransitionStates.expression_0, TransitionStates.s12_9, TransitionStates.s12_8);
                 break;
             case s12_9:
-                if (isValidTerminal("]", transitionState)) {
-
-
-                } else {
-                    writeToError("]", 0);
-                }
-                writeToOutput("]", stacks.get("s12").pop() + 1);
-                moveOnDiagrams(parser, TransitionStates.s12_10);
+                handleNonzeroTerminalStates(parser, transitionState, "]", "s12", TransitionStates.s12_10);
                 break;
             case s12_10:
-                if (isValidNonTerminal("s13")) {
-                    pushToOtherStack("s12", "s13");
-                    moveOnDiagrams(parser, TransitionStates.s13_0);
-                    moveOnDiagrams(parser, TransitionStates.s12_6);
-                }
-                else {
-                    int res = handleNonterminalErrors("s13");
-                    if (res == 2){
-                        popFromStack("s12");
-                        writeToError("s13", 2);
-                        moveOnDiagrams(parser, TransitionStates.s12_6);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.s12_10);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "s13", "s12", TransitionStates.s13_0, TransitionStates.s12_6, TransitionStates.s12_10);
                 break;
             case s12_11:
-                if (isValidNonTerminal("s7")) {
-                    pushToOtherStack("s12", "s7");
-                    moveOnDiagrams(parser, TransitionStates.s7_0);
-                    moveOnDiagrams(parser, TransitionStates.s12_12);
-                }
-                else {
-                    int res = handleNonterminalErrors("s7");
-                    if (res == 2){
-                        popFromStack("s12");
-                        writeToError("s7", 2);
-                        moveOnDiagrams(parser, TransitionStates.s12_12);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.s12_11);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "s7", "s12", TransitionStates.s7_0, TransitionStates.s12_12, TransitionStates.s12_11);
                 break;
             case s12_12:
-                if (isValidNonTerminal("s6")) {
-                    pushToOtherStack("s12", "s6");
-                    moveOnDiagrams(parser, TransitionStates.s6_0);
-                    moveOnDiagrams(parser, TransitionStates.s12_6);
-                }
-                else {
-                    int res = handleNonterminalErrors("s6");
-                    if (res == 2){
-                        popFromStack("s12");
-                        writeToError("s6", 2);
-                        moveOnDiagrams(parser, TransitionStates.s12_6);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.s12_12);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "s6", "s12", TransitionStates.s6_0, TransitionStates.s12_6, TransitionStates.s12_12);
                 break;
             case s13_0:
                 if (isValidNonTerminal("s8")) {
@@ -1600,60 +839,15 @@ public class Parser {
                 }
                 break;
             case s13_1:
-                if (isValidNonTerminal("s7")) {
-                    pushToOtherStack("s13", "s7");
-                    moveOnDiagrams(parser, TransitionStates.s7_0);
-                    moveOnDiagrams(parser, TransitionStates.s13_2);
-                }
-                else {
-                    int res = handleNonterminalErrors("s7");
-                    if (res == 2){
-                        popFromStack("s13");
-                        writeToError("s7", 2);
-                        moveOnDiagrams(parser, TransitionStates.s13_2);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.s13_1);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "s7", "s13", TransitionStates.s7_0, TransitionStates.s13_2, TransitionStates.s13_1);
                 break;
             case s13_2:
-                if (isValidNonTerminal("s6")) {
-                    pushToOtherStack("s13", "s6");
-                    moveOnDiagrams(parser, TransitionStates.s6_0);
-                    moveOnDiagrams(parser, TransitionStates.s13_3);
-                }
-                else {
-                    int res = handleNonterminalErrors("s6");
-                    if (res == 2){
-                        popFromStack("s13");
-                        writeToError("s6", 2);
-                        moveOnDiagrams(parser, TransitionStates.s13_3);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.s13_2);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "s6", "s13", TransitionStates.s6_0, TransitionStates.s13_3, TransitionStates.s13_2);
                 break;
             case s13_3:
                 return;
             case s13_4:
-                if (isValidNonTerminal("expression")) {
-                    pushToOtherStack("s13", "expression");
-                    moveOnDiagrams(parser, TransitionStates.expression_0);
-                    moveOnDiagrams(parser, TransitionStates.s13_3);
-                }
-                else {
-                    int res = handleNonterminalErrors("expression");
-                    if (res == 2){
-                        popFromStack("s13");
-                        writeToError("expression", 2);
-                        moveOnDiagrams(parser, TransitionStates.s13_3);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.s13_4);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "expression", "s13", TransitionStates.expression_0, TransitionStates.s13_3, TransitionStates.s13_4);
             case var_0:
                 if (isValidTerminal("ID", transitionState)) {
                     pushToItsStack("var", 2);
@@ -1662,22 +856,7 @@ public class Parser {
                 }
                 break;
             case var_1:
-                if (isValidNonTerminal("s5")) {
-                    pushToOtherStack("var", "s5");
-                    moveOnDiagrams(parser, TransitionStates.s5_0);
-                    moveOnDiagrams(parser, TransitionStates.var_2);
-                }
-                else {
-                    int res = handleNonterminalErrors("s5");
-                    if (res == 2){
-                        popFromStack("var");
-                        writeToError("s5", 2);
-                        moveOnDiagrams(parser, TransitionStates.var_2);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.var_1);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "s5", "var", TransitionStates.s5_0, TransitionStates.var_2, TransitionStates.var_1);
                 break;
             case var_2:
                 return;
@@ -1690,32 +869,10 @@ public class Parser {
                     moveOnDiagrams(parser, TransitionStates.s5_3);
                 break;
             case s5_1:
-                if (isValidNonTerminal("expression")) {
-                    pushToOtherStack("s5", "expression");
-                    moveOnDiagrams(parser, TransitionStates.expression_0);
-                    moveOnDiagrams(parser, TransitionStates.s5_2);
-                }
-                else {
-                    int res = handleNonterminalErrors("expression");
-                    if (res == 2){
-                        popFromStack("s5");
-                        writeToError("expression", 2);
-                        moveOnDiagrams(parser, TransitionStates.s5_2);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.s5_1);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "expression", "s5", TransitionStates.expression_0, TransitionStates.s5_2, TransitionStates.s5_1);
                 break;
             case s5_2:
-                if (isValidTerminal("]", transitionState)) {
-
-
-                } else {
-                    writeToError("]", 0);
-                }
-                writeToOutput("]", stacks.get("s5").pop() + 1);
-                moveOnDiagrams(parser, TransitionStates.s5_3);
+                handleNonzeroTerminalStates(parser, transitionState, "]", "s5", TransitionStates.s5_3);
                 break;
             case s5_3:
                 return;
@@ -1729,22 +886,7 @@ public class Parser {
                     moveOnDiagrams(parser, TransitionStates.s6_2);
                 break;
             case s6_1:
-                if (isValidNonTerminal("additive_expression")) {
-                    pushToOtherStack("s6", "additive_expression");
-                    moveOnDiagrams(parser, TransitionStates.additive_expression_0);
-                    moveOnDiagrams(parser, TransitionStates.s6_2);
-                }
-                else {
-                    int res = handleNonterminalErrors("additive_expression");
-                    if (res == 2){
-                        popFromStack("s6");
-                        writeToError("additive_expression", 2);
-                        moveOnDiagrams(parser, TransitionStates.s6_2);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.s6_1);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "additive_expression", "s6", TransitionStates.additive_expression_0, TransitionStates.s6_2, TransitionStates.s6_1);
                 break;
             case s6_2:
                 return;
@@ -1768,22 +910,7 @@ public class Parser {
                 }
                 break;
             case additive_expression_1:
-                if (isValidNonTerminal("s7")) {
-                    pushToOtherStack("additive_expression", "s7");
-                    moveOnDiagrams(parser, TransitionStates.s7_0);
-                    moveOnDiagrams(parser, TransitionStates.additive_expression_2);
-                }
-                else {
-                    int res = handleNonterminalErrors("s7");
-                    if (res == 2){
-                        popFromStack("additive_expression");
-                        writeToError("s7", 2);
-                        moveOnDiagrams(parser, TransitionStates.additive_expression_2);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.additive_expression_1);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "s7", "additive_expression", TransitionStates.s7_0, TransitionStates.additive_expression_2, TransitionStates.additive_expression_1);
                 break;
             case additive_expression_2:
                 return;
@@ -1797,37 +924,20 @@ public class Parser {
                     moveOnDiagrams(parser, TransitionStates.s7_3);
                 break;
             case s7_1:
-                if (isValidNonTerminal("term")) {
-                    pushToOtherStack("s7", "term");
-                    moveOnDiagrams(parser, TransitionStates.term_0);
-                    moveOnDiagrams(parser, TransitionStates.s7_2);
-                }
-                else {
-                    int res = handleNonterminalErrors("term");
-                    if (res == 2){
-                        popFromStack("s7");
-                        writeToError("term", 2);
-                        moveOnDiagrams(parser, TransitionStates.s7_2);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.s7_1);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "term", "s7", TransitionStates.term_0, TransitionStates.s7_2, TransitionStates.s7_1);
                 break;
             case s7_2:
                 if (isValidNonTerminal("s7")) {
                     pushToOtherStack("s7", "s7");
                     moveOnDiagrams(parser, TransitionStates.s7_0);
                     moveOnDiagrams(parser, TransitionStates.s7_3);
-                }
-                else {
+                } else {
                     int res = handleNonterminalErrors("s7");
-                    if (res == 2){
+                    if (res == 2) {
                         popFromStack("s7");
                         writeToError("s7", 2);
                         moveOnDiagrams(parser, TransitionStates.s7_3);
-                    }
-                    else {
+                    } else {
                         moveOnDiagrams(parser, TransitionStates.s7_2);
                     }
                 }
@@ -1854,22 +964,7 @@ public class Parser {
                 }
                 break;
             case term_1:
-                if (isValidNonTerminal("s8")) {
-                    pushToOtherStack("term", "s8");
-                    moveOnDiagrams(parser, TransitionStates.s8_0);
-                    moveOnDiagrams(parser, TransitionStates.term_2);
-                }
-                else {
-                    int res = handleNonterminalErrors("s8");
-                    if (res == 2){
-                        popFromStack("term");
-                        writeToError("s8", 2);
-                        moveOnDiagrams(parser, TransitionStates.term_2);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.term_1);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "s8", "term", TransitionStates.s8_0, TransitionStates.term_2, TransitionStates.term_1);
                 break;
             case term_2:
                 return;
@@ -1882,37 +977,20 @@ public class Parser {
                     moveOnDiagrams(parser, TransitionStates.s8_3);
                 break;
             case s8_1:
-                if (isValidNonTerminal("signed_factor")) {
-                    pushToOtherStack("s8", "signed_factor");
-                    moveOnDiagrams(parser, TransitionStates.signed_factor_0);
-                    moveOnDiagrams(parser, TransitionStates.s8_2);
-                }
-                else {
-                    int res = handleNonterminalErrors("signed_factor");
-                    if (res == 2){
-                        popFromStack("s8");
-                        writeToError("signed_factor", 2);
-                        moveOnDiagrams(parser, TransitionStates.s8_2);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.s8_1);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "signed_factor", "s8", TransitionStates.signed_factor_0, TransitionStates.s8_2, TransitionStates.s8_1);
                 break;
             case s8_2:
                 if (isValidNonTerminal("s8")) {
                     pushToOtherStack("s8", "s8");
                     moveOnDiagrams(parser, TransitionStates.s8_0);
                     moveOnDiagrams(parser, TransitionStates.s8_3);
-                }
-                else {
+                } else {
                     int res = handleNonterminalErrors("s8");
-                    if (res == 2){
+                    if (res == 2) {
                         popFromStack("s8");
                         writeToError("s8", 2);
                         moveOnDiagrams(parser, TransitionStates.s8_3);
-                    }
-                    else {
+                    } else {
                         moveOnDiagrams(parser, TransitionStates.s8_2);
                     }
                 }
@@ -1935,42 +1013,12 @@ public class Parser {
                 }
                 break;
             case signed_factor_1:
-                if (isValidNonTerminal("factor")) {
-                    pushToOtherStack("signed_factor", "factor");
-                    moveOnDiagrams(parser, TransitionStates.factor_0);
-                    moveOnDiagrams(parser, TransitionStates.signed_factor_2);
-                }
-                else {
-                    int res = handleNonterminalErrors("factor");
-                    if (res == 2){
-                        popFromStack("signed_factor");
-                        writeToError("factor", 2);
-                        moveOnDiagrams(parser, TransitionStates.signed_factor_2);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.signed_factor_1);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "factor", "signed_factor", TransitionStates.factor_0, TransitionStates.signed_factor_2, TransitionStates.signed_factor_1);
                 break;
             case signed_factor_2:
                 return;
             case signed_factor_3:
-                if (isValidNonTerminal("factor")) {
-                    pushToOtherStack("signed_factor", "factor");
-                    moveOnDiagrams(parser, TransitionStates.factor_0);
-                    moveOnDiagrams(parser, TransitionStates.signed_factor_2);
-                }
-                else {
-                    int res = handleNonterminalErrors("factor");
-                    if (res == 2){
-                        popFromStack("signed_factor");
-                        writeToError("factor", 2);
-                        moveOnDiagrams(parser, TransitionStates.signed_factor_2);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.signed_factor_3);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "factor", "signed_factor", TransitionStates.factor_0, TransitionStates.signed_factor_2, TransitionStates.signed_factor_3);
                 break;
             case factor_0:
                 if (isValidTerminal("(", transitionState)) {
@@ -1987,52 +1035,15 @@ public class Parser {
                 }
                 break;
             case factor_1:
-                if (isValidNonTerminal("expression")) {
-                    pushToOtherStack("factor", "expression");
-                    moveOnDiagrams(parser, TransitionStates.expression_0);
-                    moveOnDiagrams(parser, TransitionStates.factor_2);
-                }
-                else {
-                    int res = handleNonterminalErrors("expression");
-                    if (res == 2){
-                        popFromStack("factor");
-                        writeToError("expression", 2);
-                        moveOnDiagrams(parser, TransitionStates.factor_2);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.factor_1);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "expression", "factor", TransitionStates.expression_0, TransitionStates.factor_2, TransitionStates.factor_1);
                 break;
             case factor_2:
-                if (isValidTerminal(")", transitionState)) {
-
-
-                } else {
-                    writeToError(")", 0);
-                }
-                writeToOutput(")", stacks.get("factor").pop() + 1);
-                moveOnDiagrams(parser, TransitionStates.factor_3);
+                handleNonzeroTerminalStates(parser, transitionState, ")", "factor", TransitionStates.factor_3);
                 break;
             case factor_3:
                 return;
             case factor_4:
-                if (isValidNonTerminal("s15")) {
-                    pushToOtherStack("factor", "s15");
-                    moveOnDiagrams(parser, TransitionStates.s15_0);
-                    moveOnDiagrams(parser, TransitionStates.factor_3);
-                }
-                else {
-                    int res = handleNonterminalErrors("s15");
-                    if (res == 2){
-                        popFromStack("factor");
-                        writeToError("s15", 2);
-                        moveOnDiagrams(parser, TransitionStates.factor_3);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.factor_4);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "s15", "factor", TransitionStates.s15_0, TransitionStates.factor_3, TransitionStates.factor_4);
                 break;
             case call_0:
                 if (isValidTerminal("ID", transitionState)) {
@@ -2042,42 +1053,13 @@ public class Parser {
                 }
                 break;
             case call_1:
-                if (isValidTerminal("(", transitionState)) {
-
-
-                } else {
-                    writeToError("(", 0);
-                }
-                writeToOutput("(", stacks.get("call").pop() + 1);
-                moveOnDiagrams(parser, TransitionStates.call_2);
+                handleNonzeroTerminalStates(parser, transitionState, "(", "call", TransitionStates.call_2);
                 break;
             case call_2:
-                if (isValidNonTerminal("args")) {
-                    pushToOtherStack("call", "args");
-                    moveOnDiagrams(parser, TransitionStates.args_0);
-                    moveOnDiagrams(parser, TransitionStates.call_3);
-                }
-                else {
-                    int res = handleNonterminalErrors("args");
-                    if (res == 2){
-                        popFromStack("call");
-                        writeToError("args", 2);
-                        moveOnDiagrams(parser, TransitionStates.call_3);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.call_2);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "args", "call", TransitionStates.args_0, TransitionStates.call_3, TransitionStates.call_2);
                 break;
             case call_3:
-                if (isValidTerminal(")", transitionState)) {
-
-
-                } else {
-                    writeToError(")", 0);
-                }
-                writeToOutput(")", stacks.get("call").pop() + 1);
-                moveOnDiagrams(parser, TransitionStates.call_4);
+                handleNonzeroTerminalStates(parser, transitionState, ")", "call", TransitionStates.call_4);
                 break;
             case call_4:
                 return;
@@ -2100,22 +1082,7 @@ public class Parser {
                 }
                 break;
             case arg_list_1:
-                if (isValidNonTerminal("s9")) {
-                    pushToOtherStack("arg_list", "s9");
-                    moveOnDiagrams(parser, TransitionStates.s9_0);
-                    moveOnDiagrams(parser, TransitionStates.arg_list_2);
-                }
-                else {
-                    int res = handleNonterminalErrors("s9");
-                    if (res == 2){
-                        popFromStack("arg_list");
-                        writeToError("s9", 2);
-                        moveOnDiagrams(parser, TransitionStates.arg_list_2);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.arg_list_1);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "s9", "arg_list", TransitionStates.s9_0, TransitionStates.arg_list_2, TransitionStates.arg_list_1);
                 break;
             case arg_list_2:
                 return;
@@ -2128,37 +1095,20 @@ public class Parser {
                     moveOnDiagrams(parser, TransitionStates.s9_3);
                 break;
             case s9_1:
-                if (isValidNonTerminal("expression")) {
-                    pushToOtherStack("s9", "expression");
-                    moveOnDiagrams(parser, TransitionStates.expression_0);
-                    moveOnDiagrams(parser, TransitionStates.s9_2);
-                }
-                else {
-                    int res = handleNonterminalErrors("expression");
-                    if (res == 2){
-                        popFromStack("s9");
-                        writeToError("expression", 2);
-                        moveOnDiagrams(parser, TransitionStates.s9_2);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.s9_1);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "expression", "s9", TransitionStates.expression_0, TransitionStates.s9_2, TransitionStates.s9_1);
                 break;
             case s9_2:
                 if (isValidNonTerminal("s9")) {
                     pushToOtherStack("s9", "s9");
                     moveOnDiagrams(parser, TransitionStates.s9_0);
                     moveOnDiagrams(parser, TransitionStates.s9_3);
-                }
-                else {
+                } else {
                     int res = handleNonterminalErrors("s9");
-                    if (res == 2){
+                    if (res == 2) {
                         popFromStack("s9");
                         writeToError("s9", 2);
                         moveOnDiagrams(parser, TransitionStates.s9_3);
-                    }
-                    else {
+                    } else {
                         moveOnDiagrams(parser, TransitionStates.s9_2);
                     }
                 }
@@ -2178,32 +1128,10 @@ public class Parser {
                 }
                 break;
             case s15_1:
-                if (isValidNonTerminal("args")) {
-                    pushToOtherStack("s15", "args");
-                    moveOnDiagrams(parser, TransitionStates.args_0);
-                    moveOnDiagrams(parser, TransitionStates.s15_2);
-                }
-                else {
-                    int res = handleNonterminalErrors("args");
-                    if (res == 2){
-                        popFromStack("s15");
-                        writeToError("args", 2);
-                        moveOnDiagrams(parser, TransitionStates.s15_2);
-                    }
-                    else {
-                        moveOnDiagrams(parser, TransitionStates.s15_1);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "args", "s15", TransitionStates.args_0, TransitionStates.s15_2, TransitionStates.s15_1);
                 break;
             case s15_2:
-                if (isValidTerminal(")", transitionState)) {
-
-
-                } else {
-                    writeToError(")", 0);
-                }
-                writeToOutput(")", stacks.get("s15").pop() + 1);
-                moveOnDiagrams(parser, TransitionStates.s15_3);
+                handleNonzeroTerminalStates(parser, transitionState, ")", "s15", TransitionStates.s15_3);
             case s15_3:
                 return;
             case s16_0:
@@ -2218,20 +1146,38 @@ public class Parser {
                 }
                 break;
             case s16_1:
-                if (isValidTerminal(";", transitionState)) {
-
-
-                } else {
-                    writeToError(";", 0);
-                }
-                writeToOutput(";", stacks.get("s16").pop() + 1);
-                moveOnDiagrams(parser, TransitionStates.s16_2);
+                handleNonzeroTerminalStates(parser, transitionState, ";", "s16", TransitionStates.s16_2);
                 break;
             case s16_2:
                 return;
 
 
         }
+    }
+
+    private void handleNonzeroNonterminalStates(Parser parser, String nonterminal, String currentStateName, TransitionStates nextZeroStateIfValid, TransitionStates nextOfCurDiagramStateIFValid, TransitionStates currentState) {
+        if (isValidNonTerminal(nonterminal)) {
+            pushToOtherStack(currentStateName, nonterminal);
+            moveOnDiagrams(parser, nextZeroStateIfValid);
+            moveOnDiagrams(parser, nextOfCurDiagramStateIFValid);
+        } else {
+            int res = handleNonterminalErrors(nonterminal);
+            if (res == 2) {
+                popFromStack(currentStateName);
+                writeToError(nonterminal, 2);
+                moveOnDiagrams(parser, nextOfCurDiagramStateIFValid);
+            } else {
+                moveOnDiagrams(parser, currentState);
+            }
+        }
+    }
+
+    private void handleNonzeroTerminalStates(Parser parser, TransitionStates transitionState, String terminal, String currentStateName, TransitionStates nextTransitionState) {
+        if (!isValidTerminal(terminal, transitionState)) {
+            writeToError(terminal, 0);
+        }
+        writeToOutput(terminal, stacks.get(currentStateName).pop() + 1);
+        moveOnDiagrams(parser, nextTransitionState);
     }
 
     boolean searchList(String[] firstOrFollow, String searchString) {
@@ -2245,7 +1191,7 @@ public class Parser {
     boolean isValidTerminal(String terminal, TransitionStates transitionState) {
         boolean res = nextToken.toString().equals(terminal);
         if (res) {
-            if (terminal.equals("EOF")){
+            if (terminal.equals("EOF")) {
                 return res;
             }
             try {
@@ -2299,7 +1245,6 @@ public class Parser {
                 errorFormatter.format("Parser : %d : Syntax Error! Unexpected %s\n", lexer.getLineNumber(), s1);
                 break;
             case 2:
-//                System.out.println(simplests.get(s1));
                 errorFormatter.format("Parser : %d : Syntax Error! Missing %s\n", lexer.getLineNumber(), simplests.get(s1));
         }
 
@@ -2325,7 +1270,6 @@ public class Parser {
             return 0;
         } else if (searchList(firsts.get(nonTerminal), "epsilon") && searchList(follows.get(nonTerminal), nextToken.toString())) {
             return 1;
-            //handleNonterminalErrors
         } else if (searchList(follows.get(nonTerminal), nextToken.toString())) {
             return 2;
         } else {
@@ -2334,7 +1278,6 @@ public class Parser {
     }
 
     private int handleNonterminalErrors(String nonterminal) {
-//        System.out.println(nonterminal);
         int res;
         while (true) {
             res = isValidNonterminalForErrorHandling(nonterminal);
@@ -2343,7 +1286,7 @@ public class Parser {
             writeToError(nextToken.toString(), 1);
             try {
                 nextToken = lexer.get_next_token();
-                if (nextToken.toString().equals("EOF")){
+                if (nextToken.toString().equals("EOF")) {
                     errorFormatter.format("Parser : %d : Syntax Error! Unexpected EndOfFile\n", lexer.getLineNumber());
                     errorFormatter.close();
                     outputFormatter.close();

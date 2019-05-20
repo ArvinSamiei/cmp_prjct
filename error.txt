@@ -1,4 +1,5 @@
-Parser : 19 : Syntax Error! Missing else
-Parser : 19 : Syntax Error! Missing ;
-Parser : 27 : Syntax Error! Unexpected ID
-Parser : 40 : Syntax Error! Unexpected return
+Scanner : 5 (12!, invalid input)
+Parser : 20 : Syntax Error! Missing else
+Parser : 20 : Syntax Error! Missing ;
+Parser : 28 : Syntax Error! Unexpected ID
+Parser : 41 : Syntax Error! Unexpected return

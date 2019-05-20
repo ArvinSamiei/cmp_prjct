@@ -46,8 +46,6 @@ public class Lexer {
         }
         while (!lexer.fileEnded) {
             Token token = lexer.get_next_token();
-            if (token != null)
-                System.out.println(token.tokenString);
         }
 
         return;
@@ -66,7 +64,6 @@ public class Lexer {
                 break;
             }
         }
-        System.out.println(token.toString());
         return token;
     }
 
@@ -88,26 +85,16 @@ public class Lexer {
         }
         Token token;
         token = getNum();
-        if (token != null) {
-            writeToOutput(token);
-            outputFormatter.flush();
-        } else {
+        if (token == null){
             reader.seek(pointer);
             token = getKeyword();
-            if (token != null) {
-                writeToOutput(token);
-                outputFormatter.flush();
-            } else {
+            if (token == null){
                 reader.seek(pointer);
                 token = getID();
-                if (token != null) {
-                    writeToOutput(token);
-                } else {
+                if (token == null) {
                     reader.seek(pointer);
                     token = getSymbol();
-                    if (token != null) {
-                        writeToOutput(token);
-                    } else {
+                    if (token == null) {
                         reader.seek(pointer);
                         token = getComment();
                         if (token != null) {
@@ -128,6 +115,9 @@ public class Lexer {
                 }
             }
         }
+        if (fileEnded)
+            return null;
+        writeToOutput(token);
         outputFormatter.flush();
         errorFormatter.flush();
         return token;
@@ -710,17 +700,7 @@ public class Lexer {
     }
 
     private void writeToError(String string) {
-        System.out.println("heil");
-//        if (errorLineNumber != lineNumber) {
-//        if (errorLineNumber == 0) {
-//            errorFormatter.format("%d. ", lineNumber);
-//        } else {
-//            errorFormatter.format("\n%d. ", lineNumber);
-//        }
-//        errorFormatter.format("%d. ", lineNumber);
-//        errorLineNumber = lineNumber;
         errorFormatter.format("Scanner : %d (%s, invalid input)\n", lineNumber, string);
-//        }
 
     }
 

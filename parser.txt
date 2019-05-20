@@ -41,69 +41,77 @@ program
 								declaration_list
 									declaration
 										type_specifier
-											void
+											int
 										s1
 											ID
 											s10
-												(
-												params
-													int
-													ID
-													s3
-														[
-													]
-														ϵ
-												)
-												compound_stmt
-													{
-														ϵ
-													statement_list
-															return_stmt
-																return
-																s16
-																	expression
-																		ID
-																		s12
-																			[
-																			expression
-																				NUM
-																					ϵ
-																					ϵ
-																					ϵ
-																			]
-																			s13
-																					ϵ
-																				s7
-																						+
-																					term
-																							factor
-																								ID
-																									s5
-																										[
-																										expression
-																											NUM
-																												ϵ
-																												ϵ
-																												ϵ
-																										]
-																							ϵ
-																						ϵ
-																					ϵ
-																	;
-															ϵ
-													}
+												;
 									declaration_list
 										declaration
 											type_specifier
-												int
+												void
 											s1
 												ID
 												s10
-													[
-													NUM
-													]
-													;
-											ϵ
+													(
+													params
+														int
+														ID
+														s3
+															[
+														]
+															ϵ
+													)
+													compound_stmt
+														{
+															ϵ
+														statement_list
+																return_stmt
+																	return
+																	s16
+																		expression
+																			ID
+																			s12
+																				[
+																				expression
+																					NUM
+																						ϵ
+																						ϵ
+																						ϵ
+																				]
+																				s13
+																						ϵ
+																					s7
+																							+
+																						term
+																								factor
+																									ID
+																										s5
+																											[
+																											expression
+																												NUM
+																													ϵ
+																													ϵ
+																													ϵ
+																											]
+																								ϵ
+																							ϵ
+																						ϵ
+																		;
+																ϵ
+														}
+										declaration_list
+											declaration
+												type_specifier
+													int
+												s1
+													ID
+													s10
+														[
+														NUM
+														]
+														;
+												ϵ
 							statement_list
 									expression_stmt
 										expression

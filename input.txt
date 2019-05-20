@@ -2,6 +2,7 @@ int b;
 int foo(int d, int e){
     int f;
     //+++++---+-+-+-;
+    int 12!e;
     void foo2(int k[]){
         return k[0] + k[1];
     }
