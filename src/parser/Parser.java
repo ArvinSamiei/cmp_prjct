@@ -437,11 +437,6 @@ public class Parser {
                 break;
             case s3_1:
                 handleNonzeroTerminalStates(parser, transitionState, "]", "s3", TransitionStates.s3_2);
-//                if (!isValidTerminal("]", transitionState)) {
-//                    writeToError("]", 0);
-//                }
-//                writeToOutput("]", stacks.get("s3").pop());
-//                moveOnDiagrams(parser, TransitionStates.s3_2);
                 break;
             case s3_2:
                 return;
@@ -1161,10 +1156,6 @@ public class Parser {
         }
     }
 
-    /*
-
-
-     */
 
     private void handleNonzeroTerminalStates(Parser parser, TransitionStates transitionState, String terminal, String currentStateName, TransitionStates nextTransitionState) {
         if (!isValidTerminal(terminal, transitionState)) {
