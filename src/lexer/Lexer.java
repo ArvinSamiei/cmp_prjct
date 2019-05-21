@@ -1,8 +1,10 @@
 package lexer;
 
-import java.io.*;
+import java.io.EOFException;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.Formatter;
-import java.util.Scanner;
 
 public class Lexer {
     boolean fileEnded = false;
@@ -59,8 +61,7 @@ public class Lexer {
                 writeToOutput(Token.EOF);
                 outputFormatter.flush();
                 return Token.EOF;
-            }
-            else if (token != null) {
+            } else if (token != null) {
                 break;
             }
         }
@@ -85,10 +86,10 @@ public class Lexer {
         }
         Token token;
         token = getNum();
-        if (token == null){
+        if (token == null) {
             reader.seek(pointer);
             token = getKeyword();
-            if (token == null){
+            if (token == null) {
                 reader.seek(pointer);
                 token = getID();
                 if (token == null) {

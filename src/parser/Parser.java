@@ -37,43 +37,43 @@ public class Parser {
     }
 
     private void initSimplests() {
-        simplests.put("declaration_list", "int ID;");
-        simplests.put("declaration", "int ID;");
-        simplests.put("s1", "ID;");
+        simplests.put("declaration_list", "int ID ;");
+        simplests.put("declaration", "int ID ;");
+        simplests.put("s1", "ID ;");
         simplests.put("s10", ";");
         simplests.put("type_specifier", "int");
         simplests.put("params", "int ID");
         simplests.put("s11", "ID");
         simplests.put("s2", ", int ID");
         simplests.put("param", "int ID");
-        simplests.put("s3", "[]");
-        simplests.put("compound_stmt", "{ int ID;}");
+        simplests.put("s3", "[ ]");
+        simplests.put("compound_stmt", "{ int ID ; }");
         simplests.put("statement_list", ";");
         simplests.put("statement", ";");
         simplests.put("expression_stmt", ";");
-        simplests.put("selection_stmt", "if (NUM) ; else ;");
-        simplests.put("iteration_stmt", "while (NUM) ;");
-        simplests.put("switch_stmt", "switch ( ID ) {}");
-        simplests.put("return_stmt", "return;");
-        simplests.put("case_stmts", "case NUM: ;");
-        simplests.put("case_stmt", "case NUM: ;");
-        simplests.put("default_stmt", "default NUM: ;");
+        simplests.put("selection_stmt", "if ( NUM ) ; else ;");
+        simplests.put("iteration_stmt", "while ( NUM ) ;");
+        simplests.put("switch_stmt", "switch ( ID ) { }");
+        simplests.put("return_stmt", "return ;");
+        simplests.put("case_stmts", "case NUM : ;");
+        simplests.put("case_stmt", "case NUM : ;");
+        simplests.put("default_stmt", "default NUM : ;");
         simplests.put("expression", "ID");
-        simplests.put("s12", "[ID]");
+        simplests.put("s12", "[ ID ]");
         simplests.put("s13", "= ID");
-        simplests.put("s5", "[ID]");
+        simplests.put("s5", "[ ID ]");
         simplests.put("var", "ID");
-        simplests.put("signed_factor", "(ID)");
+        simplests.put("signed_factor", "( ID )");
         simplests.put("s8", "* ID");
-        simplests.put("additive_expression", "(ID)");
+        simplests.put("additive_expression", "( ID )");
         simplests.put("relop", "==");
-        simplests.put("s6", "< (ID)");
+        simplests.put("s6", "< ( ID )");
         simplests.put("addop", "+");
-        simplests.put("factor", "(ID)");
-        simplests.put("s15", "()");
-        simplests.put("term", "(ID)");
-        simplests.put("s7", "+(ID)");
-        simplests.put("call", "ID()");
+        simplests.put("factor", "( ID )");
+        simplests.put("s15", "( )");
+        simplests.put("term", "( ID )");
+        simplests.put("s7", "+ ( ID )");
+        simplests.put("call", "ID ( )");
         simplests.put("args", "ID");
         simplests.put("arg_list", "ID");
         simplests.put("s9", ", ID");
@@ -264,20 +264,21 @@ public class Parser {
                 }
                 break;
             case declaration_list_1:
-                if (isValidNonTerminal("declaration_list")) {
-                    pushToOtherStack("declaration_list", "declaration_list");
-                    moveOnDiagrams(parser, TransitionStates.declaration_list_0);
-                    moveOnDiagrams(parser, TransitionStates.declaration_list_2);
-                } else {
-                    int res = handleNonterminalErrors("declaration_list");
-                    if (res == 2) {
-                        popFromStack("declaration_list");
-                        writeToError("declaration_list", 2);
-                        moveOnDiagrams(parser, TransitionStates.declaration_list_2);
-                    } else {
-                        moveOnDiagrams(parser, TransitionStates.declaration_list_1);
-                    }
-                }
+                handleNonzeroNonterminalStates(parser, "declaration_list", "declaration_list", TransitionStates.declaration_list_0, TransitionStates.declaration_list_2, TransitionStates.declaration_list_1);
+//                if (isValidNonTerminal("declaration_list")) {
+//                    pushToOtherStack("declaration_list", "declaration_list");
+//                    moveOnDiagrams(parser, TransitionStates.declaration_list_0);
+//                    moveOnDiagrams(parser, TransitionStates.declaration_list_2);
+//                } else {
+//                    int res = handleNonterminalErrors("declaration_list");
+//                    if (res == 2) {
+//                        popFromStack("declaration_list");
+//                        writeToError("declaration_list", 2);
+//                        moveOnDiagrams(parser, TransitionStates.declaration_list_2);
+//                    } else {
+//                        moveOnDiagrams(parser, TransitionStates.declaration_list_1);
+//                    }
+//                }
                 break;
             case declaration_list_2:
                 return;
@@ -449,11 +450,12 @@ public class Parser {
                     moveOnDiagrams(parser, TransitionStates.s3_2);
                 break;
             case s3_1:
-                if (!isValidTerminal("]", transitionState)) {
-                    writeToError("]", 0);
-                }
-                writeToOutput("]", stacks.get("s3").pop());
-                moveOnDiagrams(parser, TransitionStates.s3_2);
+                handleNonzeroTerminalStates(parser, transitionState, "]", "s3", TransitionStates.s3_2);
+//                if (!isValidTerminal("]", transitionState)) {
+//                    writeToError("]", 0);
+//                }
+//                writeToOutput("]", stacks.get("s3").pop());
+//                moveOnDiagrams(parser, TransitionStates.s3_2);
                 break;
             case s3_2:
                 return;
@@ -1163,7 +1165,8 @@ public class Parser {
         } else {
             int res = handleNonterminalErrors(nonterminal);
             if (res == 2) {
-                popFromStack(currentStateName);
+                int tabs = popFromStack(currentStateName);
+                writeToOutputNonterminalError(simplests.get(nonterminal), tabs + 1);
                 writeToError(nonterminal, 2);
                 moveOnDiagrams(parser, nextOfCurDiagramStateIFValid);
             } else {
@@ -1171,6 +1174,11 @@ public class Parser {
             }
         }
     }
+
+    /*
+
+
+     */
 
     private void handleNonzeroTerminalStates(Parser parser, TransitionStates transitionState, String terminal, String currentStateName, TransitionStates nextTransitionState) {
         if (!isValidTerminal(terminal, transitionState)) {
@@ -1234,6 +1242,17 @@ public class Parser {
             outputFormatter.format("\t");
         }
         outputFormatter.format("%s\n", s1);
+    }
+
+    private void writeToOutputNonterminalError(String s1, int a) {
+        String strings[] = s1.split(" ");
+        for (String s : strings) {
+            for (int i = 0; i < a; i++) {
+                outputFormatter.format("\t");
+            }
+            outputFormatter.format("%s\n", s);
+        }
+
     }
 
     private void writeToError(String s1, int type) {
