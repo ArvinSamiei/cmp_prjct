@@ -265,20 +265,6 @@ public class Parser {
                 break;
             case declaration_list_1:
                 handleNonzeroNonterminalStates(parser, "declaration_list", "declaration_list", TransitionStates.declaration_list_0, TransitionStates.declaration_list_2, TransitionStates.declaration_list_1);
-//                if (isValidNonTerminal("declaration_list")) {
-//                    pushToOtherStack("declaration_list", "declaration_list");
-//                    moveOnDiagrams(parser, TransitionStates.declaration_list_0);
-//                    moveOnDiagrams(parser, TransitionStates.declaration_list_2);
-//                } else {
-//                    int res = handleNonterminalErrors("declaration_list");
-//                    if (res == 2) {
-//                        popFromStack("declaration_list");
-//                        writeToError("declaration_list", 2);
-//                        moveOnDiagrams(parser, TransitionStates.declaration_list_2);
-//                    } else {
-//                        moveOnDiagrams(parser, TransitionStates.declaration_list_1);
-//                    }
-//                }
                 break;
             case declaration_list_2:
                 return;
