@@ -15,6 +15,7 @@ public class Lexer {
     private int lineNumber = 1;
     int shouldWriteNewline = 1;
     boolean readFromInput = true;
+    private int state = 1;
     private char next_char;
     Character symbols[] = {';', ':', ',', '[', ']', '(', ')', '{', '}', '+', '-', '*', '<'};
     Character whiteSpaces[] = {32, 10, 13, 9, 11, 12};
@@ -64,17 +65,14 @@ public class Lexer {
 
 
     private Token scanInputFile() {
-        int state = 1;
+
         String tokenString = "";
         while (!fileEnded) {
-//            System.out.println("heil " + next_char + " " + state + " st " + readFromInput);
             if (readFromInput) {
                 next_char = readByteCastToChar();
             } else {
                 readFromInput = true;
             }
-//            System.out.println(fileEnded + " "+ (int)next_char);
-
 
             switch (state) {
                 case 1:
@@ -86,8 +84,9 @@ public class Lexer {
                         state = 3;
                         tokenString += next_char;
                     } else if (searchList(next_char, 0)) {
-                        return getToken("" + next_char, Token.SYMBOL);
+                        return getToken("" + next_char, Token.SYMBOL, 1);
                     } else if (next_char == '/') {
+                        tokenString += '/';
                         state = 4;
                     } else if (next_char == '=') {
                         state = 8;
@@ -104,14 +103,14 @@ public class Lexer {
                     if ((next_char >= 'A' && next_char <= 'Z') || (next_char >= 'a' && next_char <= 'z') || (next_char >= '0' && next_char <= '9')) {
                         tokenString += next_char;
                         continue;
-                    } else if (searchList(next_char, 0) || next_char == '/') {
+                    } else if (searchList(next_char, 0) || next_char == '=') {
                         readFromInput = false;
-                        return getToken(tokenString, Token.ID);
+                        return getToken(tokenString, Token.ID, 1);
                     } else if (searchList(next_char, 1)) {
-                        return getToken(tokenString, Token.ID);
-                    } else if (next_char == '=') {
-                        readFromInput = false;
-                        return getToken(tokenString, Token.ID);
+                        return getToken(tokenString, Token.ID, 1);
+                    } else if (next_char == '/') {
+                        tokenString += '/';
+                        state = 4;
                     } else {
                         tokenString += next_char;
                         writeToError(tokenString);
@@ -122,14 +121,14 @@ public class Lexer {
                     if (next_char >= '0' && next_char <= '9') {
                         tokenString += next_char;
                         continue;
-                    } else if (searchList(next_char, 0) || next_char == '/' || (next_char >= 'A' && next_char <= 'Z') || (next_char >= 'a' && next_char <= 'z')) {
+                    } else if (searchList(next_char, 0) || next_char == '=' || (next_char >= 'A' && next_char <= 'Z') || (next_char >= 'a' && next_char <= 'z')) {
                         readFromInput = false;
-                        return getToken(tokenString, Token.NUM);
+                        return getToken(tokenString, Token.NUM, 1);
                     } else if (searchList(next_char, 1)) {
-                        return getToken(tokenString, Token.NUM);
-                    } else if (next_char == '=') {
-                        readFromInput = false;
-                        return getToken(tokenString, Token.ID);
+                        return getToken(tokenString, Token.NUM, 1);
+                    } else if (next_char == '/') {
+                        tokenString += '/';
+                        state = 4;
                     } else {
                         tokenString += next_char;
                         writeToError(tokenString);
@@ -137,24 +136,25 @@ public class Lexer {
                     }
                     break;
                 case 4:
-                    if (next_char == '/') {
-                        state = 5;
-                    } else if (next_char == '*') {
-                        state = 6;
-                    } else if (searchList(next_char, 1)) {
-                        state = 1;
-                        writeToError("/");
-                    } else if (next_char == '=') {
-                        state = 1;
-                        writeToError("/");
-                        readFromInput = false;
+                    if (next_char == '/' || next_char == '*') {
+                        state = (next_char == '/') ? 5 : 6;
+                        if (tokenString.length() > 1) {
+                            tokenString = tokenString.substring(0, tokenString.length() - 1);
+                            char firstChar = tokenString.charAt(0);
+                            if (firstChar >= '0' && firstChar <= '9') {
+                                return getToken(tokenString, Token.NUM, state);
+                            } else {
+                                return getToken(tokenString, Token.ID, state);
+                            }
+                        }
                     } else {
-                        writeToError("/" + next_char);
+                        writeToError(tokenString);
+                        readFromInput = false;
                         state = 1;
                     }
                     break;
                 case 5:
-                    if (next_char == '\n') {
+                    if (next_char == '\n' || next_char == '\r') {
                         state = 1;
                     }
                     break;
@@ -172,10 +172,10 @@ public class Lexer {
                     break;
                 case 8:
                     if (next_char == '=') {
-                        return getToken("==", Token.SYMBOL);
+                        return getToken("==", Token.SYMBOL, 1);
                     } else if (searchList(next_char, 0) || next_char == '/' || (next_char >= 'A' && next_char <= 'Z') || (next_char >= 'a' && next_char <= 'z') || (next_char >= '0' && next_char <= '9')) {
                         readFromInput = false;
-                        return getToken("=", Token.SYMBOL);
+                        return getToken("=", Token.SYMBOL, 1);
                     }
 
 
@@ -184,7 +184,7 @@ public class Lexer {
         return Token.EOF;
     }
 
-    private Token getToken(String tokenString, Token tokenFound) {
+    private Token getToken(String tokenString, Token tokenFound, int next_state) {
         if (tokenFound.name().equals("ID")) {
             if (searchList(tokenString, 2)) {
                 tokenFound = Token.KEYWORD;
@@ -194,6 +194,7 @@ public class Lexer {
         token = tokenFound;
         token.tokenString = tokenString;
         writeToOutput(token);
+        state = next_state;
         return token;
     }
 
@@ -217,12 +218,13 @@ public class Lexer {
     }
 
 
-    private void gotoNewline() throws IOException {
+    private void gotoNewline(int type) throws IOException {
         lineNumber++;
         if (shouldWriteNewline == 0) {
             shouldWriteNewline = 1;
         }
-        reader.seek(reader.getFilePointer() + 1);
+        if (type == 0)
+            reader.seek(reader.getFilePointer() + 1);
     }
 
 
@@ -231,7 +233,10 @@ public class Lexer {
         try {
             c = (char) reader.readByte();
             if (c == '\r') {
-                gotoNewline();
+                gotoNewline(0);
+            }
+            if (c == '\n') {
+                gotoNewline(1);
             }
         } catch (IOException e) {
             if (e instanceof EOFException) {
